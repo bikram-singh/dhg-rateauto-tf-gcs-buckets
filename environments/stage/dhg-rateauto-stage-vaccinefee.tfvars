@@ -1,4 +1,4 @@
-bucket_name           = "dhg-rateauto-stage-vaccine"
+bucket_name           = "dhg-rateauto-stage-vaccinefee"
 enable_versioning   = true
 project_id = "dhg-vaccine-rateauto-nonpord"
 
