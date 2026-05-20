@@ -1,4 +1,4 @@
-name: "GCS Bucket Provision"
+name: "Provision GCS Bucket"
 
 permissions:
   id-token: write
