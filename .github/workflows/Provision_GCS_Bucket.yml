@@ -61,7 +61,28 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      # TEMPORARY - Remove this step once bucket is successfully imported into Terraform state
+      - name: Import existing bucket into Terraform state (if not already tracked)
+        if: ${{ github.event.inputs.action == 'import' }}
+        run: |
+          PROJECT=$(grep 'project_id' ${{ github.event.inputs.tfvars_file }} | awk -F'"' '{print $2}')
+          BUCKET=$(grep 'bucket_name' ${{ github.event.inputs.tfvars_file }} | awk -F'"' '{print $2}')
+          echo "Project : $PROJECT"
+          echo "Bucket  : $BUCKET"
+
+          if terraform state show google_storage_bucket.default > /dev/null 2>&1; then
+            echo "✅ Bucket already in Terraform state — skipping import."
+          else
+            echo "📥 Importing gs://$BUCKET into Terraform state..."
+            terraform import \
+              -var-file=environments/shared.tfvars \
+              -var-file=${{ github.event.inputs.tfvars_file }} \
+              google_storage_bucket.default \
+              $PROJECT/$BUCKET && echo "✅ Import successful." || echo "⚠️ Import failed — bucket may not exist in GCP."
+          fi
+
       - name: Terraform Plan
+        if: ${{ github.event.inputs.action != 'import' }}
         run: |
           terraform plan \
             -var-file=environments/shared.tfvars \
