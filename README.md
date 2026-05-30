@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/gallery/DHG_logo.png" alt="DHG Logo" width="90" height="90"/>
+
 # 🪣 dhg-rateauto-tf-gcs-buckets
 
 ### Terraform · Google Cloud Storage · Enterprise Bucket Provisioning
@@ -23,6 +25,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
+- [UI Gallery](#-ui-gallery)
 - [Why This Module Exists](#-why-this-module-exists)
 - [Architecture](#-architecture)
 - [Repository Structure](#-repository-structure)
@@ -73,6 +76,16 @@ This repo is **independent** of the GKE and VPC repos — it can be deployed at 
 | 🤖 **Autoclass** | Optional, automatic storage class management |
 
 ---
+
+## 🖼️ UI Gallery
+
+> 📌 **Note:** All images are stored in `docs/gallery/`. Upload your screenshots there to display them here.
+
+### 🪣 GCS Bucket — GCP Console View
+![GCS Bucket Console](docs/gallery/gcs-bucket-console.png)
+
+---
+
 
 ## 💡 Why This Module Exists
 
