@@ -553,6 +553,6 @@ provider "google" {
 
 ## Maintainer
 
-**Bikram Singh** — DHG Platform Engineering Team
+**Bikram Singh**
 - GCP Project: `dhg-vaccine-rateauto-nonpord`
 - Region: `us-central1`
