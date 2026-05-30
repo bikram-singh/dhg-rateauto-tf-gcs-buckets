@@ -5,7 +5,7 @@
 # 🪣 dhg-rateauto-tf-gcs-buckets
 
 ### Terraform · Google Cloud Storage · Enterprise Bucket Provisioning
-### DHG Rate Automation Platform — `dhg-vaccine-rateauto-nonpord`
+### DHG Rate Automation Platform - `dhg-vaccine-rateauto-nonpord`
 
 [![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.4-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io)
 [![GCS](https://img.shields.io/badge/Google-Cloud_Storage-4285F4?logo=google-cloud&logoColor=white)](https://cloud.google.com/storage)
@@ -16,7 +16,7 @@
 
 ---
 
-*Provisions enterprise-grade Google Cloud Storage buckets with autoclass, versioning, soft delete, hierarchical namespace, dynamic lifecycle rules, mandatory org-policy labels, and conditional IAM bindings — fully reusable across all DHG environments.*
+*Provisions enterprise-grade Google Cloud Storage buckets with autoclass, versioning, soft delete, hierarchical namespace, dynamic lifecycle rules, mandatory org-policy labels, and conditional IAM bindings - fully reusable across all DHG environments.*
 
 </div>
 
@@ -49,16 +49,16 @@
 
 ## 🌐 Overview
 
-This repository provisions **Google Cloud Storage (GCS) buckets** for the DHG Rate Automation platform using Terraform. It is designed as a **fully reusable, environment-agnostic module** — the same Terraform code provisions buckets for dev, stage, and prod by simply switching the `.tfvars` file.
+This repository provisions **Google Cloud Storage (GCS) buckets** for the DHG Rate Automation platform using Terraform. It is designed as a **fully reusable, environment-agnostic module** - the same Terraform code provisions buckets for dev, stage, and prod by simply switching the `.tfvars` file.
 
 The module enforces **enterprise defaults** out of the box:
-- 🚫 **No public access** — `public_access_prevention = enforced` by default
-- 🔒 **Uniform bucket-level access** — IAM-only, no per-object ACLs
-- 🏷️ **Mandatory org-policy labels** — `aide-id`, `environment`, `service-tier` required by GCP org policy
-- 🔄 **Dynamic lifecycle rules** — fully configurable object transition and deletion policies
-- 🛡️ **Conditional IAM bindings** — role assignments with optional CEL expression conditions
+- 🚫 **No public access** - `public_access_prevention = enforced` by default
+- 🔒 **Uniform bucket-level access** - IAM-only, no per-object ACLs
+- 🏷️ **Mandatory org-policy labels** - `aide-id`, `environment`, `service-tier` required by GCP org policy
+- 🔄 **Dynamic lifecycle rules** - fully configurable object transition and deletion policies
+- 🛡️ **Conditional IAM bindings** - role assignments with optional CEL expression conditions
 
-This repo is **independent** of the GKE and VPC repos — it can be deployed at any point in the infrastructure lifecycle.
+This repo is **independent** of the GKE and VPC repos - it can be deployed at any point in the infrastructure lifecycle.
 
 ### 🔑 Key Facts
 
@@ -81,7 +81,7 @@ This repo is **independent** of the GKE and VPC repos — it can be deployed at 
 
 > 📌 **Note:** All images are stored in `docs/gallery/`. Upload your screenshots there to display them here.
 
-### 🪣 GCS Bucket — GCP Console View
+### 🪣 GCS Bucket - GCP Console View
 ![GCS Bucket Console](docs/gallery/gcs-bucket-console.png)
 
 ---
@@ -98,10 +98,10 @@ Rather than creating GCS buckets manually in the GCP Console (which leads to inc
 | Buckets created without mandatory labels | Org-policy labels enforced in every `apply` |
 | Public access accidentally enabled | `public_access_prevention = enforced` as default |
 | Per-object ACLs bypassing IAM | Uniform bucket-level access always enabled |
-| No lifecycle rules → storage cost grows | Dynamic lifecycle rules — transition or delete by age |
+| No lifecycle rules → storage cost grows | Dynamic lifecycle rules - transition or delete by age |
 | No versioning → accidental deletion is permanent | Soft delete + optional versioning |
 | IAM roles granted without conditions | CEL expression support for fine-grained ABAC |
-| Manual bucket creation is not repeatable | Infrastructure as Code — apply same config to any env |
+| Manual bucket creation is not repeatable | Infrastructure as Code - apply same config to any env |
 
 ---
 
@@ -111,7 +111,7 @@ Rather than creating GCS buckets manually in the GCP Console (which leads to inc
 ┌────────────────────────────────────────────────────────────────────┐
 │                   GitHub Actions CI/CD Pipeline                     │
 │                 (Workload Identity Federation)                       │
-│         No JSON keys — short-lived OIDC tokens only                │
+│         No JSON keys - short-lived OIDC tokens only                │
 └──────────────────────────┬─────────────────────────────────────────┘
                            │ terraform apply
                            ▼
@@ -175,7 +175,7 @@ dhg-rateauto-tf-gcs-buckets/
 | 🔌 **APIs enabled** | `storage.googleapis.com`, `iam.googleapis.com` |
 | 🔐 **IAM permissions** | `roles/storage.admin`, `roles/resourcemanager.projectIamAdmin` |
 | 🔑 **Authentication** | WIF via GitHub Actions (CI/CD) or `gcloud auth application-default login` (local) |
-| 🏷️ **Org Policy** | `custom.enforceLabelsCloudStorageBuckets` — labels `aide-id`, `environment`, `service-tier` must be set |
+| 🏷️ **Org Policy** | `custom.enforceLabelsCloudStorageBuckets` - labels `aide-id`, `environment`, `service-tier` must be set |
 
 Enable required APIs:
 
@@ -199,11 +199,11 @@ gcloud services enable storage.googleapis.com iam.googleapis.com \
 
 ## 🔍 File-by-File Breakdown
 
-### 📄 `main.tf` — Core Resources (77 lines)
+### 📄 `main.tf` - Core Resources (77 lines)
 
 Two resource blocks that do all the heavy lifting:
 
-#### Block 1 — GCS Bucket
+#### Block 1 - GCS Bucket
 
 ```hcl
 resource "google_storage_bucket" "default" {
@@ -262,7 +262,7 @@ resource "google_storage_bucket" "default" {
 }
 ```
 
-#### Block 2 — IAM Bindings with CEL Conditions
+#### Block 2 - IAM Bindings with CEL Conditions
 
 ```hcl
 resource "google_storage_bucket_iam_binding" "default" {
@@ -283,17 +283,17 @@ resource "google_storage_bucket_iam_binding" "default" {
 }
 ```
 
-The `for_each = var.assign_role_iam_binding ? var.role_member_conditions : {}` pattern means IAM bindings are **only created when explicitly requested** — safe by default.
+The `for_each = var.assign_role_iam_binding ? var.role_member_conditions : {}` pattern means IAM bindings are **only created when explicitly requested** - safe by default.
 
 ---
 
-### 📄 `variables.tf` — 17 Input Variables (180 lines)
+### 📄 `variables.tf` - 17 Input Variables (180 lines)
 
-The most comprehensive file — covers bucket identity, features, lifecycle, labels, and IAM. Includes inline commented examples for both lifecycle rules and IAM conditions directly in the file for quick reference.
+The most comprehensive file - covers bucket identity, features, lifecycle, labels, and IAM. Includes inline commented examples for both lifecycle rules and IAM conditions directly in the file for quick reference.
 
 ---
 
-### 📄 `outputs.tf` — Single Output (4 lines)
+### 📄 `outputs.tf` - Single Output (4 lines)
 
 ```hcl
 output "bucket_name" {
@@ -302,11 +302,11 @@ output "bucket_name" {
 }
 ```
 
-Simple and purposeful — the bucket name is what downstream modules need to reference for object operations.
+Simple and purposeful - the bucket name is what downstream modules need to reference for object operations.
 
 ---
 
-### 📄 `versions.tf` — Version Constraints
+### 📄 `versions.tf` - Version Constraints
 
 ```hcl
 terraform {
@@ -320,11 +320,11 @@ terraform {
 }
 ```
 
-The upper bound `< 6.11.0` is a **deliberate pinning** — the Google provider 6.x series introduced breaking changes in resource schemas. This ensures consistent behavior until the upgrade is explicitly tested and approved.
+The upper bound `< 6.11.0` is a **deliberate pinning** - the Google provider 6.x series introduced breaking changes in resource schemas. This ensures consistent behavior until the upgrade is explicitly tested and approved.
 
 ---
 
-### 📄 `providers.tf` — Provider Configuration
+### 📄 `providers.tf` - Provider Configuration
 
 ```hcl
 provider "google" {
@@ -333,7 +333,7 @@ provider "google" {
 }
 ```
 
-Minimal provider block — no hardcoded credentials. Authentication is handled entirely by WIF in CI/CD and by ADC locally.
+Minimal provider block - no hardcoded credentials. Authentication is handled entirely by WIF in CI/CD and by ADC locally.
 
 ---
 
@@ -361,7 +361,7 @@ public_access_prevention = var.public_access_prevention  # default: "enforced"
 
 | Value | Behaviour |
 |---|---|
-| `"enforced"` ✅ | No public access possible — even if someone tries to set `allUsers` IAM |
+| `"enforced"` ✅ | No public access possible - even if someone tries to set `allUsers` IAM |
 | `"inherited"` | Follows the org policy (may allow public in some orgs) |
 
 **Always use `enforced`** for any bucket containing application data, backups, or logs.
@@ -397,7 +397,7 @@ hierarchical_namespace {
 }
 ```
 
-Enables **folder-like semantics** in the bucket — similar to a traditional file system. Required for:
+Enables **folder-like semantics** in the bucket - similar to a traditional file system. Required for:
 - BigQuery Omni cross-cloud analytics
 - Dataproc / Dataflow jobs that expect directory structures
 - Analytics workloads needing atomic directory operations
@@ -435,7 +435,7 @@ soft_delete_policy {
 }
 ```
 
-Soft delete is a **safety net** — deleted objects are not immediately purged but held in a recoverable state for the specified duration:
+Soft delete is a **safety net** - deleted objects are not immediately purged but held in a recoverable state for the specified duration:
 
 | Duration | Seconds | Use Case |
 |---|---|---|
@@ -469,7 +469,7 @@ These three labels are **required by the GCP org policy** `custom.enforceLabelsC
 
 ### 🔄 8. Dynamic Lifecycle Rules
 
-The most powerful feature — **fully configurable lifecycle rules** via a `map(object)` variable supporting every available GCS condition:
+The most powerful feature - **fully configurable lifecycle rules** via a `map(object)` variable supporting every available GCS condition:
 
 ```hcl
 dynamic "lifecycle_rule" {
@@ -532,9 +532,9 @@ See [IAM Bindings with CEL Conditions](#-iam-bindings-with-cel-conditions) for e
 
 | Variable | Type | Default | Required | Description |
 |---|---|---|---|---|
-| `project_id` | `string` | — | ✅ | GCP project ID |
+| `project_id` | `string` | - | ✅ | GCP project ID |
 | `region` | `string` | `us-central1` | No | Bucket location |
-| `bucket_name` | `string` | — | ✅ | Globally unique bucket name |
+| `bucket_name` | `string` | - | ✅ | Globally unique bucket name |
 | `storage_class` | `string` | `STANDARD` | No | Default storage class |
 
 **Storage class options:**
@@ -596,7 +596,7 @@ map(object({
 
 | Variable | Type | Default | Description |
 |---|---|---|---|
-| `lifecycle_rules` | `map(object)` | `{}` | Map of lifecycle rules — see full schema below |
+| `lifecycle_rules` | `map(object)` | `{}` | Map of lifecycle rules - see full schema below |
 
 **Full lifecycle rule object schema:**
 ```hcl
@@ -627,7 +627,7 @@ map(object({
 
 | Output | Description |
 |---|---|
-| `bucket_name` | The name of the created GCS bucket — used by applications to reference the bucket |
+| `bucket_name` | The name of the created GCS bucket - used by applications to reference the bucket |
 
 ```bash
 # Retrieve after apply
@@ -638,7 +638,7 @@ terraform output bucket_name
 
 ## 🔄 Lifecycle Rules
 
-### Example 1 — Delete Objects Older Than 30 Days
+### Example 1 - Delete Objects Older Than 30 Days
 
 ```hcl
 lifecycle_rules = {
@@ -666,7 +666,7 @@ lifecycle_rules = {
 
 ---
 
-### Example 2 — Move STANDARD Objects to NEARLINE After 60 Days
+### Example 2 - Move STANDARD Objects to NEARLINE After 60 Days
 
 ```hcl
 lifecycle_rules = {
@@ -694,7 +694,7 @@ lifecycle_rules = {
 
 ---
 
-### Example 3 — Delete Old Versions When 2+ Newer Versions Exist
+### Example 3 - Delete Old Versions When 2+ Newer Versions Exist
 
 ```hcl
 lifecycle_rules = {
@@ -722,7 +722,7 @@ lifecycle_rules = {
 
 ---
 
-### Example 4 — Combined Rules (Multi-tier Cost Optimisation)
+### Example 4 - Combined Rules (Multi-tier Cost Optimisation)
 
 ```hcl
 lifecycle_rules = {
@@ -998,10 +998,10 @@ terraform destroy -var-file=environments/dev.tfvars
 
 ```
 Attacker tries:  gsutil iam ch allUsers:objectViewer gs://bucket
-Result:          ERROR: 403 Forbidden — org policy prevents public access
+Result:          ERROR: 403 Forbidden - org policy prevents public access
 
 Attacker tries:  Setting ACL to public-read
-Result:          ERROR — uniform access disabled ACLs
+Result:          ERROR - uniform access disabled ACLs
 
 Conclusion:      The bucket is 100% inaccessible without valid IAM credentials
 ```
@@ -1053,7 +1053,7 @@ provider "google" {
 | [`dhg-rateauto-tf-postgres`](https://github.com/bikram-singh/dhg-rateauto-tf-postgres) | Cloud SQL PostgreSQL + PSC | 2️⃣ Parallel |
 | [`dhg-rateauto-tf-gke`](https://github.com/bikram-singh/dhg-rateauto-tf-gke) | GKE Autopilot Cluster | 2️⃣ Parallel |
 | [`dhg-rateauto-tf-gke-routing`](https://github.com/bikram-singh/dhg-rateauto-tf-gke-routing) | Gateway API, HTTPS, Routing | 3️⃣ Third |
-| [`dhg-rateauto-tf-gcs-buckets`](https://github.com/bikram-singh/dhg-rateauto-tf-gcs-buckets) | **This repo** — GCS Bucket Provisioning | 4️⃣ Independent |
+| [`dhg-rateauto-tf-gcs-buckets`](https://github.com/bikram-singh/dhg-rateauto-tf-gcs-buckets) | **This repo** - GCS Bucket Provisioning | 4️⃣ Independent |
 | [`dhg-rateauto-api-backend`](https://github.com/bikram-singh/dhg-rateauto-api-backend) | FastAPI Backend Application | 5️⃣ App layer |
 | [`dhg-rateauto-ui-frontend`](https://github.com/bikram-singh/dhg-rateauto-ui-frontend) | React Frontend Dashboard | 5️⃣ App layer |
 
